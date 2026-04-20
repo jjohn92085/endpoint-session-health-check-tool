@@ -53,7 +53,7 @@ catch {
 
 }
 
-# the finally block runs no matter what occurs
+# the finally block runs no matter what occurs or happens
 # Stop-Transcript stops a transcript that was already started
 
 finally {
