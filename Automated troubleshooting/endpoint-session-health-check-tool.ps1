@@ -15,43 +15,101 @@ try {
     $logDir = "$env:USERPROFILE\Desktop\Logs"
 
     # test-path checks if $logDir path already exists on the desktop then creates the directory if it doesn't
+    # -path is used to just tell powershell $logDir is the path like a type of input into test-path
     # New-Item creates a new directory but can also create new files, folder, or registry keys
+    # New-Item can create files to like new-item -path "path" -ItemType File
 
     if (-not (Test-Path -Path $logDir)) {
         New-Item -ItemType Directory -Path $logDir
         Write-Host "A new directory has been created: $logDir"
-    } 
+    }
 
     # Start-transcript creates a text log file that records all commands entered and output shown in console during a powershell session
     # erroraction -stop makes the script stop if there's an error and run what is in the catch {} block
+    # append is added for continuous logging
 
-    Start-Transcript -Path "$logDir\SessionLog.txt" -ErrorAction Stop
+    Start-Transcript -Path "$logDir\SessionLog.txt" -Append -ErrorAction Stop
     Write-Host "A log has been created"
-
-    # The Win32_ComputerSystem checks the PartofDomain true or false (boolean) property to see if the workstation is joined to a domain
-    # win_32 is a class that is meant to represent a computer that has setup information like hardware and config
-    # You can use Get-CimInstance cmdlet to access partofdomain property on win32_computersystem
-    # Get-CmInstance replaced Get-WmiObject and is used to access information from the win32 class 
-    #win32 also has operating system, win32_process, win32_service, win32_logicaldisk
-    # workgroups are peer to peer and do not have a central server
-    # write-host writes information to the console about the script/app
-
-            if ((Get-CimInstance Win32_ComputerSystem).PartOfDomain) {
-
-                Write-Host "This machine is on a domain"
-        } 
-            else {
-
-                Write-Host "This machine is in a workgroup"
-        }
 
 }
 
 catch {
 
     Write-host "There was a problem creating the log file"
+    return
 
 }
+
+try {
+
+    # The Win32_ComputerSystem checks the PartofDomain true or false (boolean) property to see if the workstation is joined to a domain
+    # win_32 is a class that is meant to represent a computer that has setup information like hardware and config
+    # You can use Get-CimInstance cmdlet to access partofdomain property on win32_computersystem
+    # Get-CmInstance replaced Get-WmiObject and is used to access information from the win32 class 
+    # win32 also has operating system, win32_process, win32_service, win32_logicaldisk
+    # workgroups are peer to peer and do not have a central server
+    # write-host writes information to the console about the script/app and in this instance will write to the log
+
+    if ((Get-CimInstance Win32_ComputerSystem).PartofDomain) {
+        Write-Host "This machine is on a domain"
+    } 
+        else {
+            
+            Write-Host "This machine is in a workgroup"
+
+        }
+    }
+
+    catch {
+
+        Write-Host "Unable to check if this workstation is part of a domain."
+
+    }
+
+try {
+
+    # the query session object provides information on the active session such as username, mode etc.
+    # quser lists all users on the session
+    # replace formats the output by adding commas with regex
+    # ConvertFrom-Csv creates a powershell object to access the properties such as username
+
+    $session = (quser) -replace '\s{2,}', ',' | ConvertFrom-Csv
+
+    # sessionname is a property of the session object
+    # -match tells you true or false if it finds the thing you wanted
+    # rdp-tcp is a value stored on the sessioname property that tells you if the session is Windows RDP
+    # elseif is used here to provide another condition to check rather than else that says everything else is local
+    # this can't check for third party running services since it's just working off the sessionName property
+
+    if ($session.SessionName -match "rdp-tcp") {
+
+        Write-Host "This is a remote session"
+
+    } elseif ($session.SessionName -match 'console') {
+
+        Write-Host "This is a local session"
+    }
+
+}
+
+catch {
+
+    Write-Host "There was an error checking for a remote session"
+
+}
+
+# check if RDP is enabled
+
+try {
+
+
+
+}
+
+
+
+
+
 
 # the finally block runs no matter what occurs or happens
 # Stop-Transcript stops a transcript that was already started
@@ -61,6 +119,7 @@ finally {
     Stop-Transcript -ErrorAction SilentlyContinue
 
 }
+
 
 
 
