@@ -126,46 +126,54 @@ try {
    # test-path checks all parts of the path are actually there
    # Get-ChildItem gets the amount or name in a location
    # Select-Object can retrieve properties of an object
+   # -ExpandProperty allows you to get strings
+   # PSChildName gets you the key name
    # foreach loops through each server and pings it
    # $Server is a variable
    # -ComputerName is a named parameter
 
    if (Test-Path $Path) {
     $ServerNames = Get-ChildItem $Path | Select-Object -ExpandProperty PSChildName
-
     if ($ServerNames) {
     foreach ($Server in $ServerNames) {
-        Test-Connection -ComputerName $Server
-        
+        $Results = Test-Connection -ComputerName $Server -Count 1 -ErrorAction SilentlyContinue
+        Write-Host "Here is outcome $Results"
     }
     else {
         Write-Output "There is no saved server information"
     }
-
 }
    }
-
 }
-
 catch {
-
       Write-Host "There is no saved server information"
-
 }
 
+# Get-CimInstance is used to get info from windows
+# win32_processor is a class with processor details
+# Select-Object grabs CPUs coming from Win32_processor
+# -ExpandProperty gets the actual value to work with
+# LoadPercentage is the cpu usage at the current time
+# | means pass it on to next command
 
+Try  {
+    Get-CimInstance Win32_Processor | Select-Object -ExpandProperty LoadPercentage
+}
 
+Catch {
 
-
+    Write-Host "There was an error trying to check CPU usage"
+}
 
 # the finally block runs no matter what occurs or happens
-# Stop-Transcript stops a transcript that was already started
+# Stop-Transcript stops start-transcript
+# -ErrorAction tells you what to do next
+# SilentlyContinue means don't pay attention to any errors
 
 finally {
-
     Stop-Transcript -ErrorAction SilentlyContinue
-
 }
+
 
 
 
