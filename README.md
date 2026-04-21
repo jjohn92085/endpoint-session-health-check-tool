@@ -10,16 +10,12 @@ Keep these features
 	- Check whether the current user is a local admin 
 	- Check whether the device is domain-joined or in a workgroup 
 	- Check whether the session is local or remote/RDP  
-	
-Why keep it: this is very relevant to help desk work and not too hard to code.
 
 2. RDP and server connectivity checks
 
 	- Check whether RDP is enabled on the machine 
 	- Check whether the machine can reach a defined server with a ping test 
 	- Optionally test whether a common server port is reachable 
-	
-Why keep it: practical and still manageable.
 
 3. Basic performance checks
 
