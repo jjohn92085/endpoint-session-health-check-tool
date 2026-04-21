@@ -30,12 +30,14 @@ try {
 
     Start-Transcript -Path "$logDir\SessionLog.txt" -Append -ErrorAction Stop
     Write-Host "A log has been created"
-
 }
+
+# return is meant to stop the script here if a log file can't be created
 
 catch {
 
     Write-host "There was a problem creating the log file"
+
     return
 
 }
@@ -51,20 +53,21 @@ try {
     # write-host writes information to the console about the script/app and in this instance will write to the log
 
     if ((Get-CimInstance Win32_ComputerSystem).PartofDomain) {
-        Write-Host "This machine is on a domain"
-    } 
-        else {
-            
-            Write-Host "This machine is in a workgroup"
 
-        }
+        Write-Host "This machine is on a domain"
+    }
+    else {
+
+        Write-Host "This machine is in a workgroup"
+    }
+
     }
 
     catch {
 
-        Write-Host "Unable to check if this workstation is part of a domain."
-
+        Write_host "Unable to check if this workstation is part of a domain."
     }
+
 
 try {
 
@@ -75,34 +78,78 @@ try {
 
     $session = (quser) -replace '\s{2,}', ',' | ConvertFrom-Csv
 
+
     # sessionname is a property of the session object
     # -match tells you true or false if it finds the thing you wanted
     # rdp-tcp is a value stored on the sessioname property that tells you if the session is Windows RDP
     # elseif is used here to provide another condition to check rather than else that says everything else is local
     # this can't check for third party running services since it's just working off the sessionName property
 
-    if ($session.SessionName -match "rdp-tcp") {
-
+    if ($session.Sessionname -match "rdp-tcp") {
         Write-Host "This is a remote session"
-
-    } elseif ($session.SessionName -match 'console') {
-
+    } 
+    elseif ($session.SessionName -match "console") {
         Write-Host "This is a local session"
     }
+}
+
+catch {
+    Write_host "There was an error checking for a remote session"
+}
+
+# check if RDP is enabled on the workstation in case it's needed to remove to server
+# Get-ItemPropertyValue retrieves raw value of property from an item such as registry values like names/amounts
+# fDenyTSConnections is a windows registry key for for enabling and disabling RDP connections
+# 0 means RDP is enabled
+
+try {
+
+    $rdp = Get-ItemPropertyValue 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' fDenyTSConnections
+
+    if ($rdp -eq 0) {
+        Write-Host "RDP is enabled on this machine"
+    } else {
+        Write-Host "RDP is not enabled on this machine"
+    }
+    }
+
+catch {
+   Write-Host "there was an error checking if RDP is enabled on this machine"
+}
+
+# find server name and test connection
+
+try {
+
+   $Path = 'HKCU:\Software\Microsoft\Terminal Server Client\Servers'
+
+   # test-path checks all parts of the path are actually there
+   # Get-ChildItem gets the amount or name in a location
+   # Select-Object can retrieve properties of an object
+   # foreach loops through each server and pings it
+   # $Server is a variable
+   # -ComputerName is a named parameter
+
+   if (Test-Path $Path) {
+    $ServerNames = Get-ChildItem $Path | Select-Object -ExpandProperty PSChildName
+
+    if ($ServerNames) {
+    foreach ($Server in $ServerNames) {
+        Test-Connection -ComputerName $Server
+        
+    }
+    else {
+        Write-Output "There is no saved server information"
+    }
+
+}
+   }
 
 }
 
 catch {
 
-    Write-Host "There was an error checking for a remote session"
-
-}
-
-# check if RDP is enabled
-
-try {
-
-
+      Write-Host "There is no saved server information"
 
 }
 
