@@ -24,7 +24,8 @@ Domain-joined  or part of a workgroup
 Identify session type:
 Local or Remote (RDP)
 
-🌐 RDP & Server Connectivity Checks
+🌐 RDP & Server Connectivity Checks:
+
 Verify if RDP is enabled on the machine
 Test connectivity to a defined server using:
 Ping (ICMP)
