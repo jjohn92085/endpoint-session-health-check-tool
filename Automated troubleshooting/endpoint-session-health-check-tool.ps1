@@ -169,30 +169,51 @@ Catch {
 Try {
     Get-CimInstance Win32_OperatingSystem | Select-Object ` @{Name = "Usage (%)"; Expression = {[math]::Round((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) / $_.TotalVisibleMemorySize) * 100, 2)}}
 }
-catch {
+Catch {
 
     Write-Host "There was an error checking RAM usage"
 
 }
 
-# 
+# disk assessment: free, total, and percent
+
 Try {
 
-    $allVolumes = (Get-Volume -DriveLetter C).SizeRemaining
-    $bytes2GB = $allVolumes / 1GB 
-    $round = [Math]::Round($bytes2GB, 2)
+    $freeSpace = (Get-Volume -DriveLetter C).SizeRemaining
+    $totalSpace = (Get-Volume -DriveLetter C).Size
+    $bytes2GBFreeSpace = $freeSpace / 1GB
+    $bytes2GBTotalSpace = $totalSpace / 1GB
+    $roundFreeSpace = [Math]::Round($bytes2GBFreeSpace, 2)
+    $roundTotalSpace = [Math]::Round($bytes2GBTotalSpace, 2)
+    $totalDiskPercent = $roundFreeSpace /  $roundTotalSpace * 100
+    $totalDiskPercentRounded = [Math]::Round($totalDiskPercent, 1)
 
-    Write-Host "Here is your drive: $round GB"
+    Write-Host "Here is your free space on your C drive: $roundFreeSpace GB"
+    Write-Host "Here is the total space on your C drive: $roundTotalSpace GB"
+    Write-Host "Here is the total percent usage of your C drive: $totalDiskPercentRounded %"
 
 }
 
-Catch 
+Catch {
+
+Write-Host "There was an error checking free disk space "
+
+}
+
+Try {
 
 
 
 
 
+}
 
+Catch {
+
+
+
+
+}
 # The finally block runs no matter what occurs or happens
 # Stop-Transcript stops start-transcript
 # -ErrorAction tells you what to do next
