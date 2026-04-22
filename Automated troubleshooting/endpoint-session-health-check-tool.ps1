@@ -149,6 +149,7 @@ catch {
       Write-Host "There is no saved server information"
 }
 
+# CPU usage check
 # Get-CimInstance is used to get info from windows
 # win32_processor is a class with processor details
 # Select-Object grabs CPUs coming from Win32_processor
@@ -159,13 +160,36 @@ catch {
 Try  {
     Get-CimInstance Win32_Processor | Select-Object -ExpandProperty LoadPercentage
 }
-
 Catch {
-
     Write-Host "There was an error trying to check CPU usage"
 }
 
-# the finally block runs no matter what occurs or happens
+# RAM usage check
+
+Try {
+    Get-CimInstance Win32_OperatingSystem | Select-Object ` @{Name = "Usage (%)"; Expression = {[math]::Round((($_.TotalVisibleMemorySize - $_.FreePhysicalMemory) / $_.TotalVisibleMemorySize) * 100, 2)}}
+}
+catch {
+
+    Write-Host "There was an error checking RAM usage"
+
+}
+
+# 
+Try {
+
+    $allVolumes = Get-Volume
+
+    Write-Host "Here is your drive: $allVolumes"
+
+}
+
+
+
+
+
+
+# The finally block runs no matter what occurs or happens
 # Stop-Transcript stops start-transcript
 # -ErrorAction tells you what to do next
 # SilentlyContinue means don't pay attention to any errors
