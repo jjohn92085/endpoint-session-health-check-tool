@@ -7,8 +7,8 @@ Goal
 
 Provide quick visibility into:
 
-User permissions
-Environment configuration
+- User permissions
+- Environment configuration
 Connectivity status
 Basic system health
 Features
