@@ -17,8 +17,7 @@ Features
 - User & Environment Checks
 - Determine if the current user is a local administrator
 - Detect whether the device is:
-- Domain-joined
-- Workgroup
+- Domain-joined or Workgroup
   
 Identify session type:
 
@@ -34,7 +33,6 @@ Basic Performance Checks
 - Monitor CPU usage
 - Monitor memory usage
 - Check system uptime
-
 
 Usage
 
