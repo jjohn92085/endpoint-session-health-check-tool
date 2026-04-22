@@ -40,7 +40,7 @@ Usage
 
 - Run manually:
 
-.\HealthCheck.ps1
+.\endpoint-session-health-check-tool.ps1
 
 Or configure to run at login via:
 
