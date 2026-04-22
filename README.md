@@ -1,24 +1,49 @@
 Endpoint Session & Health Check Tool
+Overview
 
-Goal:
-A Powershell script that runs manually or at login to check whether the user’s machine has common session, access, and performance issues, then outputs a simple health report.
+A PowerShell script that runs manually or at user login to identify common session, access, and performance issues, then outputs a simple, easy-to-read health report.
 
-Keep these features
+🎯 Goal
 
-1. User and environment checks
+Provide quick visibility into:
 
-	- Check whether the current user is a local admin 
-	- Check whether the device is domain-joined or in a workgroup 
-	- Check whether the session is local or remote/RDP  
+User permissions
+Environment configuration
+Connectivity status
+Basic system health
 
-2. RDP and server connectivity checks
+🔍 Features
 
-	- Check whether RDP is enabled on the machine 
-	- Check whether the machine can reach a defined server with a ping test 
-	- Optionally test whether a common server port is reachable 
+🧑‍💻 User & Environment Checks
+Determine if the current user is a local administrator
+Detect whether the device is:
+Domain-joined
+or part of a workgroup
+Identify session type:
+Local
+or Remote (RDP)
 
-3. Basic performance checks
+🌐 RDP & Server Connectivity Checks
+Verify if RDP is enabled on the machine
+Test connectivity to a defined server using:
+Ping (ICMP)
 
-	- Check CPU usage 
-	- Check memory usage 
-	- Check system uptime
+Optionally test if a specific server port is reachable
+⚙️ Basic Performance Checks
+Monitor CPU usage
+Monitor memory usage
+Check system uptime
+🚀 Usage
+
+Run manually:
+
+.\HealthCheck.ps1
+
+Or configure to run at login via:
+
+Task Scheduler
+Group Policy (GPO)
+📌 Notes
+Designed for endpoint troubleshooting and quick diagnostics
+Lightweight and fast execution
+Can be extended with additional checks as needed
