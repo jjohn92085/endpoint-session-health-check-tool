@@ -19,7 +19,7 @@ Features
 - Detect whether the device is:
 - Domain-joined
 - Workgroup
-- 
+  
 Identify session type:
 
 - Local
