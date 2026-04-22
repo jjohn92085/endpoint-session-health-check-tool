@@ -21,5 +21,4 @@ Keep these features
 
 	- Check CPU usage 
 	- Check memory usage 
-	- Check system uptime 
-	- Flag if uptime is too high and suggest restart 
+	- Check system uptime
