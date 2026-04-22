@@ -175,7 +175,7 @@ Catch {
 
 }
 
-# disk assessment: free, total, and percent
+# disk analysis: free, total, and percent
 
 Try {
 
@@ -188,9 +188,11 @@ Try {
     $totalDiskPercent = $roundFreeSpace /  $roundTotalSpace * 100
     $totalDiskPercentRounded = [Math]::Round($totalDiskPercent, 1)
 
-    Write-Host "Here is your free space on your C drive: $roundFreeSpace GB"
-    Write-Host "Here is the total space on your C drive: $roundTotalSpace GB"
-    Write-Host "Here is the total percent usage of your C drive: $totalDiskPercentRounded %"
+    Write-Host "Disk Analysis"
+    Write-Host "Free Space: $roundFreeSpace GB"
+    Write-Host "Total Space: $roundTotalSpace GB"
+    Write-Host "Free Space (%): $totalDiskPercentRounded %"
+    Write-Host ""
 
 }
 
@@ -200,18 +202,27 @@ Write-Host "There was an error checking free disk space "
 
 }
 
+#check uptime
+
 Try {
 
+$uptime = Get-Uptime
 
+$uptimeHours = $uptime.TotalHours
 
+$uptimeHoursRounded = [Math]::Round($uptimeHours, 2)
+$uptimeHoursRoundedTruncated = [Math]::Truncate($uptimeHoursRounded)
+$uptimeHoursDecimal = $uptimeHoursRounded - [Math]::Floor($uptimeHoursRounded)
+$uptimeMinutes = ($uptimeHoursDecimal * 60)
 
+Write-Host "Uptime Analysis"
+Write-Host "Total Uptime: $uptimeHoursRoundedTruncated Hours $uptimeMinutes Minutes"
 
 }
 
 Catch {
 
-
-
+Write-Host "There was an error checking uptime"
 
 }
 # The finally block runs no matter what occurs or happens
@@ -220,6 +231,8 @@ Catch {
 # SilentlyContinue means don't pay attention to any errors
 
 finally {
+
+    Write-Host "The script has completed running"
     Stop-Transcript -ErrorAction SilentlyContinue
 }
 
