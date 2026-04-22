@@ -19,8 +19,7 @@ Basic system health
 
 Determine if the current user is a local administrator
 Detect whether the device is:
-Domain-joined
-or part of a workgroup
+Domain-joined  or part of a workgroup
 
 Identify session type:
 Local or Remote (RDP)
