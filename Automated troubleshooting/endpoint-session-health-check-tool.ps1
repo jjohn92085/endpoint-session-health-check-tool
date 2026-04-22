@@ -178,11 +178,15 @@ catch {
 # 
 Try {
 
-    $allVolumes = Get-Volume
+    $allVolumes = (Get-Volume -DriveLetter C).SizeRemaining
+    $bytes2GB = $allVolumes / 1GB 
+    $round = [Math]::Round($bytes2GB, 2)
 
-    Write-Host "Here is your drive: $allVolumes"
+    Write-Host "Here is your drive: $round GB"
 
 }
+
+Catch 
 
 
 
