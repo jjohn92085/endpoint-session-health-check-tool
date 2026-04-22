@@ -33,9 +33,9 @@ Test connectivity to a defined server using:
 Basic Performance Checks
 - Monitor CPU usage
 - Monitor memory usage
- - Check system uptime
+- Check system uptime
 
- - 
+
 Usage
 
 - Run manually:
