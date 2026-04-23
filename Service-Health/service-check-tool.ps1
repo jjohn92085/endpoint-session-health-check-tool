@@ -7,13 +7,16 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 $geolocation = (Get-Service -Name "Geolocation Service").status
 
-#check if service is  running and stop it
+#check if service is running and stop it
 
 if ($geolocation -eq "Running" -or "StartPending" -or "ContinuePending" ) {
 
     Stop-Service -Name "Geolocation Service"
 
 } 
+
+# service is already stopped
+
 else {
 
     Write-Host "The Geolocation service is stopped"
